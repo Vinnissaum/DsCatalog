@@ -3,8 +3,11 @@ package com.vinnissaum.dscatalog.services;
 import com.vinnissaum.dscatalog.dto.CategoryDTO;
 import com.vinnissaum.dscatalog.entities.Category;
 import com.vinnissaum.dscatalog.repositories.CategoryRepository;
+import com.vinnissaum.dscatalog.services.exceptions.DatabaseException;
 import com.vinnissaum.dscatalog.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +54,16 @@ public class CategoryService {
             return new CategoryDTO(entity);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException("Id not found: " + id);
+        }
+    }
+
+    public void delete(Long id) {
+        try {
+            repository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("Id not found: " + id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Integrity violation");
         }
     }
 }
