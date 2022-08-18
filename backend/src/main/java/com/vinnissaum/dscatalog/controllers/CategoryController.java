@@ -3,7 +3,6 @@ package com.vinnissaum.dscatalog.controllers;
 import com.vinnissaum.dscatalog.dto.CategoryDTO;
 import com.vinnissaum.dscatalog.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -37,5 +36,12 @@ public class CategoryController {
                 .buildAndExpand(dto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(dto);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO dto) {
+        dto = service.update(id, dto);
+
+        return ResponseEntity.ok().body(dto);
     }
 }
